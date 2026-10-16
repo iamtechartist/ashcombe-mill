@@ -1,0 +1,309 @@
+{
+ "generator": "blender/veg/tree_gen.py",
+ "units": "metres, +Y up, origin at trunk base on the ground",
+ "color0": "R flexibility (0 trunk base .. 1 leaf tips), G phase of primary limb, B baked AO, A 1",
+ "normals": "leaf/strand vertex normals are crown proxy normals; do not flip on back faces",
+ "variants": [
+  {
+   "name": "willow_a",
+   "species": "weeping willow",
+   "height": 13.18,
+   "crownRadius": 8.81,
+   "trunkRadius": 0.429,
+   "stems": 1,
+   "tris": 51470,
+   "lod1": "willow_a_lod1",
+   "lod1Tris": 9914,
+   "barkTris": 14504,
+   "cards": 7104,
+   "material": {
+    "bark": "bark_willow",
+    "leaves": "leaves_willow"
+   }
+  },
+  {
+   "name": "willow_b",
+   "species": "weeping willow",
+   "height": 15.6,
+   "crownRadius": 8.26,
+   "trunkRadius": 0.388,
+   "stems": 1,
+   "tris": 49964,
+   "lod1": "willow_b_lod1",
+   "lod1Tris": 9968,
+   "barkTris": 12490,
+   "cards": 7087,
+   "material": {
+    "bark": "bark_willow",
+    "leaves": "leaves_willow"
+   }
+  },
+  {
+   "name": "alder_a",
+   "species": "alder",
+   "height": 14.08,
+   "crownRadius": 3.87,
+   "trunkRadius": 0.249,
+   "stems": 1,
+   "tris": 12824,
+   "lod1": "alder_a_lod1",
+   "lod1Tris": 1732,
+   "barkTris": 4040,
+   "cards": 4392,
+   "material": {
+    "bark": "bark_alder",
+    "leaves": "leaves_alder"
+   }
+  },
+  {
+   "name": "alder_b",
+   "species": "alder",
+   "height": 11.57,
+   "crownRadius": 4.72,
+   "trunkRadius": 0.197,
+   "stems": 2,
+   "tris": 15052,
+   "lod1": "alder_b_lod1",
+   "lod1Tris": 2230,
+   "barkTris": 6112,
+   "cards": 4470,
+   "material": {
+    "bark": "bark_alder",
+    "leaves": "leaves_alder"
+   }
+  },
+  {
+   "name": "alder_c",
+   "species": "alder",
+   "height": 9.85,
+   "crownRadius": 4.73,
+   "trunkRadius": 0.147,
+   "stems": 4,
+   "tris": 18032,
+   "lod1": "alder_c_lod1",
+   "lod1Tris": 3464,
+   "barkTris": 8456,
+   "cards": 4788,
+   "material": {
+    "bark": "bark_alder",
+    "leaves": "leaves_alder"
+   }
+  },
+  {
+   "name": "alder_d",
+   "species": "alder",
+   "height": 15.4,
+   "crownRadius": 4.31,
+   "trunkRadius": 0.3,
+   "stems": 1,
+   "tris": 15516,
+   "lod1": "alder_d_lod1",
+   "lod1Tris": 2688,
+   "barkTris": 6244,
+   "cards": 4636,
+   "material": {
+    "bark": "bark_alder",
+    "leaves": "leaves_alder"
+   }
+  },
+  {
+   "name": "oak_hero",
+   "species": "English oak",
+   "height": 17.98,
+   "crownRadius": 11.04,
+   "trunkRadius": 0.7,
+   "stems": 1,
+   "tris": 36362,
+   "lod1": "oak_hero_lod1",
+   "lod1Tris": 5754,
+   "barkTris": 17710,
+   "cards": 9326,
+   "material": {
+    "bark": "bark_oak",
+    "leaves": "leaves_oak"
+   }
+  },
+  {
+   "name": "oak_small",
+   "species": "English oak",
+   "height": 11.4,
+   "crownRadius": 6.11,
+   "trunkRadius": 0.337,
+   "stems": 1,
+   "tris": 16586,
+   "lod1": "oak_small_lod1",
+   "lod1Tris": 1912,
+   "barkTris": 6732,
+   "cards": 4927,
+   "material": {
+    "bark": "bark_oak",
+    "leaves": "leaves_oak"
+   }
+  },
+  {
+   "name": "hawthorn_a",
+   "species": "hawthorn",
+   "height": 4.99,
+   "crownRadius": 2.52,
+   "trunkRadius": 0.091,
+   "stems": 1,
+   "tris": 8164,
+   "lod1": "hawthorn_a_lod1",
+   "lod1Tris": 1168,
+   "barkTris": 2428,
+   "cards": 2868,
+   "material": {
+    "bark": "bark_hawthorn",
+    "leaves": "leaves_hedgerow"
+   }
+  },
+  {
+   "name": "hawthorn_b",
+   "species": "hawthorn",
+   "height": 4.99,
+   "crownRadius": 2.94,
+   "trunkRadius": 0.016,
+   "stems": 2,
+   "tris": 10190,
+   "lod1": "hawthorn_b_lod1",
+   "lod1Tris": 1546,
+   "barkTris": 4156,
+   "cards": 3017,
+   "material": {
+    "bark": "bark_hawthorn",
+    "leaves": "leaves_hedgerow"
+   }
+  },
+  {
+   "name": "hawthorn_c",
+   "species": "hawthorn",
+   "height": 6.44,
+   "crownRadius": 3.19,
+   "trunkRadius": 0.078,
+   "stems": 3,
+   "tris": 12444,
+   "lod1": "hawthorn_c_lod1",
+   "lod1Tris": 2228,
+   "barkTris": 6048,
+   "cards": 3198,
+   "material": {
+    "bark": "bark_hawthorn",
+    "leaves": "leaves_hedgerow"
+   }
+  },
+  {
+   "name": "hedge_a",
+   "species": "laid hedge (hawthorn/blackthorn)",
+   "height": 2.75,
+   "crownRadius": 3.32,
+   "trunkRadius": 0.055,
+   "stems": 5,
+   "tris": 4536,
+   "lod1": "hedge_a_lod1",
+   "lod1Tris": 932,
+   "barkTris": 1100,
+   "cards": 1654,
+   "material": {
+    "bark": "bark_hawthorn",
+    "leaves": "leaves_hedgerow"
+   },
+   "length": 6.0,
+   "width": 1.5,
+   "topHeight": 2.04,
+   "tiling": "segments run along X from -3 to +3 m; place at 6 m spacing (ends overlap 0.12 m)"
+  },
+  {
+   "name": "hedge_b",
+   "species": "laid hedge (hawthorn/blackthorn)",
+   "height": 3.14,
+   "crownRadius": 3.25,
+   "trunkRadius": 0.055,
+   "stems": 5,
+   "tris": 4848,
+   "lod1": "hedge_b_lod1",
+   "lod1Tris": 982,
+   "barkTris": 1396,
+   "cards": 1662,
+   "material": {
+    "bark": "bark_hawthorn",
+    "leaves": "leaves_hedgerow"
+   },
+   "length": 6.0,
+   "width": 1.6,
+   "topHeight": 2.31,
+   "tiling": "segments run along X from -3 to +3 m; place at 6 m spacing (ends overlap 0.12 m)"
+  },
+  {
+   "name": "hedge_c",
+   "species": "laid hedge (hawthorn/blackthorn)",
+   "height": 2.35,
+   "crownRadius": 3.3,
+   "trunkRadius": 0.055,
+   "stems": 5,
+   "tris": 4260,
+   "lod1": "hedge_c_lod1",
+   "lod1Tris": 904,
+   "barkTris": 832,
+   "cards": 1650,
+   "material": {
+    "bark": "bark_hawthorn",
+    "leaves": "leaves_hedgerow"
+   },
+   "length": 6.0,
+   "width": 1.35,
+   "topHeight": 1.83,
+   "tiling": "segments run along X from -3 to +3 m; place at 6 m spacing (ends overlap 0.12 m)"
+  },
+  {
+   "name": "beech_a",
+   "species": "beech",
+   "height": 21.54,
+   "crownRadius": 7.88,
+   "trunkRadius": 0.36,
+   "stems": 1,
+   "tris": 6488,
+   "lod1": "beech_a_lod1",
+   "lod1Tris": 1060,
+   "barkTris": 1192,
+   "cards": 2648,
+   "material": {
+    "bark": "bark_beech",
+    "leaves": "leaves_hedgerow"
+   }
+  },
+  {
+   "name": "beech_b",
+   "species": "beech",
+   "height": 23.16,
+   "crownRadius": 6.22,
+   "trunkRadius": 0.32,
+   "stems": 1,
+   "tris": 6234,
+   "lod1": "beech_b_lod1",
+   "lod1Tris": 954,
+   "barkTris": 1000,
+   "cards": 2617,
+   "material": {
+    "bark": "bark_beech",
+    "leaves": "leaves_hedgerow"
+   }
+  },
+  {
+   "name": "ash_a",
+   "species": "ash",
+   "height": 19.93,
+   "crownRadius": 7.94,
+   "trunkRadius": 0.3,
+   "stems": 1,
+   "tris": 5958,
+   "lod1": "ash_a_lod1",
+   "lod1Tris": 852,
+   "barkTris": 770,
+   "cards": 2594,
+   "material": {
+    "bark": "bark_ash",
+    "leaves": "leaves_hedgerow"
+   }
+  }
+ ]
+}

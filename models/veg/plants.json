@@ -1,0 +1,504 @@
+{
+ "version": 1,
+ "file": "plants.glb",
+ "conventions": {
+  "up": "+Y",
+  "units": "m",
+  "origin": "plant base on the ground; floating/submerged plants: water surface",
+  "materials": "plants_a, plants_b: alphaMode MASK (cutoff 0.4), double sided, one per atlas",
+  "COLOR_0": "R = flex (0 base .. 1 tips), G = per-stem phase 0..1, B = baked AO, A = 1. Disable material.vertexColors.",
+  "NORMAL": "proxy normals: blended toward a vase-shaped clump normal (out from the vertical axis, tilting to the sky with height; floating/submerged sets: toward the sky) so clumps shade as volumes. Do not flip on back faces (TSL: material.normalNode = normalViewGeometry)",
+  "nodes": "variant <name> = empty node at the origin (identity); its child <name>_mesh holds the geometry",
+  "quantized": "meshopt/KHR_mesh_quantization: the child mesh node matrix is the dequantisation transform; convert attributes to float, then bake the child matrix into the geometry"
+ },
+ "variants": [
+  {
+   "name": "reed_a",
+   "species": "Phragmites australis",
+   "height": 2.662,
+   "radius": 1.063,
+   "tris": 2762,
+   "habitat": "reedbed",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "reed_b",
+   "species": "Phragmites australis",
+   "height": 2.432,
+   "radius": 0.841,
+   "tris": 2004,
+   "habitat": "reedbed",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "reed_c",
+   "species": "Phragmites australis",
+   "height": 2.091,
+   "radius": 0.758,
+   "tris": 1338,
+   "habitat": "reedbed",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "reedmace_a",
+   "species": "Typha latifolia",
+   "height": 1.812,
+   "radius": 0.753,
+   "tris": 572,
+   "habitat": "reedbed",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "reedmace_b",
+   "species": "Typha latifolia",
+   "height": 1.516,
+   "radius": 0.899,
+   "tris": 442,
+   "habitat": "reedbed",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "rush_a",
+   "species": "Juncus effusus",
+   "height": 0.935,
+   "radius": 0.639,
+   "tris": 1250,
+   "habitat": "bank",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "rush_b",
+   "species": "Juncus effusus",
+   "height": 0.781,
+   "radius": 0.535,
+   "tris": 1022,
+   "habitat": "bank",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "rush_c",
+   "species": "Juncus effusus",
+   "height": 0.62,
+   "radius": 0.469,
+   "tris": 750,
+   "habitat": "bank",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "iris_a",
+   "species": "Iris pseudacorus",
+   "height": 1.06,
+   "radius": 0.598,
+   "tris": 1232,
+   "habitat": "bank",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "iris_b",
+   "species": "Iris pseudacorus",
+   "height": 0.947,
+   "radius": 0.479,
+   "tris": 876,
+   "habitat": "bank",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "iris_c",
+   "species": "Iris pseudacorus",
+   "height": 0.816,
+   "radius": 0.48,
+   "tris": 480,
+   "habitat": "bank",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "meadowsweet_a",
+   "species": "Filipendula ulmaria",
+   "height": 1.582,
+   "radius": 0.586,
+   "tris": 982,
+   "habitat": "bank",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "meadowsweet_b",
+   "species": "Filipendula ulmaria",
+   "height": 1.386,
+   "radius": 0.54,
+   "tris": 662,
+   "habitat": "bank",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "meadowsweet_c",
+   "species": "Filipendula ulmaria",
+   "height": 1.162,
+   "radius": 0.521,
+   "tris": 474,
+   "habitat": "bank",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "loosestrife_a",
+   "species": "Lythrum salicaria",
+   "height": 1.355,
+   "radius": 0.337,
+   "tris": 728,
+   "habitat": "bank",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "loosestrife_b",
+   "species": "Lythrum salicaria",
+   "height": 1.122,
+   "radius": 0.384,
+   "tris": 552,
+   "habitat": "bank",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "loosestrife_c",
+   "species": "Lythrum salicaria",
+   "height": 1.03,
+   "radius": 0.259,
+   "tris": 314,
+   "habitat": "bank",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "cowparsley_a",
+   "species": "Anthriscus sylvestris",
+   "height": 1.28,
+   "radius": 0.518,
+   "tris": 1122,
+   "habitat": "meadow",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "cowparsley_b",
+   "species": "Anthriscus sylvestris",
+   "height": 1.134,
+   "radius": 0.512,
+   "tris": 660,
+   "habitat": "meadow",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "cowparsley_c",
+   "species": "Anthriscus sylvestris",
+   "height": 1.072,
+   "radius": 0.372,
+   "tris": 394,
+   "habitat": "meadow",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "buttercup_a",
+   "species": "Ranunculus acris",
+   "height": 0.468,
+   "radius": 0.191,
+   "tris": 426,
+   "habitat": "meadow",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "buttercup_b",
+   "species": "Ranunculus acris",
+   "height": 0.493,
+   "radius": 0.14,
+   "tris": 280,
+   "habitat": "meadow",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "buttercup_c",
+   "species": "Ranunculus acris",
+   "height": 0.376,
+   "radius": 0.128,
+   "tris": 126,
+   "habitat": "meadow",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "buttercup_d",
+   "species": "Ranunculus acris",
+   "height": 0.607,
+   "radius": 0.182,
+   "tris": 280,
+   "habitat": "meadow",
+   "atlas": "plants_a"
+  },
+  {
+   "name": "lily_a",
+   "species": "Nymphaea alba",
+   "height": 0.045,
+   "radius": 0.767,
+   "tris": 792,
+   "habitat": "floating",
+   "atlas": "plants_a",
+   "origin": "water surface"
+  },
+  {
+   "name": "lily_b",
+   "species": "Nymphaea alba",
+   "height": 0.05,
+   "radius": 0.547,
+   "tris": 490,
+   "habitat": "floating",
+   "atlas": "plants_a",
+   "origin": "water surface"
+  },
+  {
+   "name": "lily_c",
+   "species": "Nymphaea alba",
+   "height": 0.046,
+   "radius": 0.395,
+   "tris": 244,
+   "habitat": "floating",
+   "atlas": "plants_a",
+   "origin": "water surface"
+  },
+  {
+   "name": "crowfoot_a",
+   "species": "Ranunculus penicillatus",
+   "height": 0.017,
+   "radius": 2.014,
+   "tris": 596,
+   "habitat": "submerged",
+   "atlas": "plants_a",
+   "origin": "water surface, upstream root",
+   "flow": "+X",
+   "depth": [
+    -0.45,
+    0.0
+   ]
+  },
+  {
+   "name": "crowfoot_b",
+   "species": "Ranunculus penicillatus",
+   "height": 0.016,
+   "radius": 1.555,
+   "tris": 420,
+   "habitat": "submerged",
+   "atlas": "plants_a",
+   "origin": "water surface, upstream root",
+   "flow": "+X",
+   "depth": [
+    -0.45,
+    0.0
+   ]
+  },
+  {
+   "name": "crowfoot_c",
+   "species": "Ranunculus penicillatus",
+   "height": 0.016,
+   "radius": 1.021,
+   "tris": 276,
+   "habitat": "submerged",
+   "atlas": "plants_a",
+   "origin": "water surface, upstream root",
+   "flow": "+X",
+   "depth": [
+    -0.45,
+    0.0
+   ]
+  },
+  {
+   "name": "nettle_a",
+   "species": "Urtica dioica",
+   "height": 1.044,
+   "radius": 0.513,
+   "tris": 1240,
+   "habitat": "shade",
+   "atlas": "plants_b"
+  },
+  {
+   "name": "nettle_b",
+   "species": "Urtica dioica",
+   "height": 0.904,
+   "radius": 0.409,
+   "tris": 966,
+   "habitat": "shade",
+   "atlas": "plants_b"
+  },
+  {
+   "name": "nettle_c",
+   "species": "Urtica dioica",
+   "height": 0.779,
+   "radius": 0.343,
+   "tris": 718,
+   "habitat": "shade",
+   "atlas": "plants_b"
+  },
+  {
+   "name": "fern_a",
+   "species": "Dryopteris / Polystichum fern (Poly Haven fern_02)",
+   "height": 0.815,
+   "radius": 0.819,
+   "tris": 1450,
+   "habitat": "shade",
+   "atlas": "plants_b",
+   "source": "polyhaven:fern_02/fern_02_b"
+  },
+  {
+   "name": "fern_b",
+   "species": "Dryopteris / Polystichum fern (Poly Haven fern_02)",
+   "height": 0.664,
+   "radius": 0.637,
+   "tris": 1450,
+   "habitat": "shade",
+   "atlas": "plants_b",
+   "source": "polyhaven:fern_02/fern_02_c"
+  },
+  {
+   "name": "fern_c",
+   "species": "Dryopteris / Polystichum fern (Poly Haven fern_02)",
+   "height": 0.574,
+   "radius": 0.491,
+   "tris": 784,
+   "habitat": "shade",
+   "atlas": "plants_b",
+   "source": "polyhaven:fern_02/fern_02_a"
+  },
+  {
+   "name": "fern_d",
+   "species": "Dryopteris / Polystichum fern (Poly Haven fern_02)",
+   "height": 0.447,
+   "radius": 0.494,
+   "tris": 816,
+   "habitat": "shade",
+   "atlas": "plants_b",
+   "source": "polyhaven:fern_02/fern_02_d"
+  },
+  {
+   "name": "grass_tall_a",
+   "species": "meadow grasses (Poly Haven grass_medium_01)",
+   "height": 0.323,
+   "radius": 0.092,
+   "tris": 290,
+   "habitat": "meadow",
+   "atlas": "plants_b",
+   "source": "polyhaven:grass_medium_01/grass_medium_01_tall_a"
+  },
+  {
+   "name": "grass_tall_b",
+   "species": "meadow grasses (Poly Haven grass_medium_01)",
+   "height": 0.236,
+   "radius": 0.085,
+   "tris": 340,
+   "habitat": "meadow",
+   "atlas": "plants_b",
+   "source": "polyhaven:grass_medium_01/grass_medium_01_tall_c"
+  },
+  {
+   "name": "grass_mid_a",
+   "species": "meadow grasses (Poly Haven grass_medium_01)",
+   "height": 0.217,
+   "radius": 0.131,
+   "tris": 1300,
+   "habitat": "meadow",
+   "atlas": "plants_b",
+   "source": "polyhaven:grass_medium_01/grass_medium_01_mid_a"
+  },
+  {
+   "name": "grass_mid_b",
+   "species": "meadow grasses (Poly Haven grass_medium_01)",
+   "height": 0.178,
+   "radius": 0.121,
+   "tris": 1257,
+   "habitat": "meadow",
+   "atlas": "plants_b",
+   "source": "polyhaven:grass_medium_01/grass_medium_01_mid_b"
+  },
+  {
+   "name": "tussock_a",
+   "species": "rough bank tussock (Poly Haven grass_medium_02)",
+   "height": 0.232,
+   "radius": 0.179,
+   "tris": 1215,
+   "habitat": "bank",
+   "atlas": "plants_b",
+   "source": "polyhaven:grass_medium_02/grass_medium_02_c"
+  },
+  {
+   "name": "tussock_b",
+   "species": "rough bank tussock (Poly Haven grass_medium_02)",
+   "height": 0.261,
+   "radius": 0.192,
+   "tris": 1399,
+   "habitat": "bank",
+   "atlas": "plants_b",
+   "source": "polyhaven:grass_medium_02/grass_medium_02_d"
+  },
+  {
+   "name": "tussock_c",
+   "species": "rough bank tussock (Poly Haven grass_medium_02)",
+   "height": 0.403,
+   "radius": 0.237,
+   "tris": 1400,
+   "habitat": "bank",
+   "atlas": "plants_b",
+   "source": "polyhaven:grass_medium_02/grass_medium_02_e"
+  },
+  {
+   "name": "turf_a",
+   "species": "short turf tufts (Poly Haven grass_bermuda_01)",
+   "height": 0.134,
+   "radius": 0.178,
+   "tris": 215,
+   "habitat": "meadow",
+   "atlas": "plants_b",
+   "source": "polyhaven:grass_bermuda_01/None"
+  },
+  {
+   "name": "turf_b",
+   "species": "short turf tufts (Poly Haven grass_bermuda_01)",
+   "height": 0.135,
+   "radius": 0.157,
+   "tris": 183,
+   "habitat": "meadow",
+   "atlas": "plants_b",
+   "source": "polyhaven:grass_bermuda_01/None"
+  },
+  {
+   "name": "turf_c",
+   "species": "short turf tufts (Poly Haven grass_bermuda_01)",
+   "height": 0.145,
+   "radius": 0.177,
+   "tris": 293,
+   "habitat": "meadow",
+   "atlas": "plants_b",
+   "source": "polyhaven:grass_bermuda_01/None"
+  },
+  {
+   "name": "celandine_a",
+   "species": "Ficaria verna, lesser celandine (Poly Haven celandine_01)",
+   "height": 0.186,
+   "radius": 0.153,
+   "tris": 622,
+   "habitat": "shade",
+   "atlas": "plants_b",
+   "source": "polyhaven:celandine_01/celandine_01_a"
+  },
+  {
+   "name": "celandine_b",
+   "species": "Ficaria verna, lesser celandine (Poly Haven celandine_01)",
+   "height": 0.145,
+   "radius": 0.168,
+   "tris": 599,
+   "habitat": "shade",
+   "atlas": "plants_b",
+   "source": "polyhaven:celandine_01/celandine_01_b"
+  },
+  {
+   "name": "celandine_c",
+   "species": "Ficaria verna, lesser celandine (Poly Haven celandine_01)",
+   "height": 0.176,
+   "radius": 0.132,
+   "tris": 1199,
+   "habitat": "shade",
+   "atlas": "plants_b",
+   "source": "polyhaven:celandine_01/celandine_01_c"
+  }
+ ]
+}

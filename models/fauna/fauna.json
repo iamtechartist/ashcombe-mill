@@ -1,0 +1,274 @@
+{
+ "version": 1,
+ "generated": "2026-10-09",
+ "source": "blender/fauna/*.py (procedural geometry, rigs and painted textures, headless Blender 5.2) + blender/fauna/pack_fauna.mjs",
+ "conventions": {
+  "units": "metres, life size (scale 1)",
+  "axes": "glTF: +Y up, +Z = the animal's forward (head direction), +X = the animal's left",
+  "skinning": "every model is ONE skinned mesh (SkinnedMesh) with its armature; clone instances with SkeletonUtils.clone() (three/addons/utils/SkeletonUtils.js), not Object3D.clone()",
+  "clips": "in-place loops (the root never travels): AnimationMixer + LoopRepeat; the last key equals the first, so loops are seamless. Every clip keys every bone (T/R/S), so switching clips never leaves a bone in a stale pose; crossFadeTo() ~0.2-0.4 s between clips",
+  "materials": "metallicRoughness PBR; baseColor ETC1S KTX2 (sRGB), ORM ETC1S KTX2 (G = roughness, B = metal = 0, R = 1, no AO); swan also has a UASTC normal map",
+  "loaders": "GLTFLoader + KTX2Loader + MeshoptDecoder (EXT_meshopt_compression, KHR_mesh_quantization, KHR_texture_basisu), as for the other models",
+  "vertexColors": "none (no COLOR_0)"
+ },
+ "creatures": {
+  "swan": {
+   "name": "Mute swan",
+   "species": "Cygnus olor",
+   "glb": "models/fauna/swan.glb",
+   "bytes": 294272,
+   "tris": 5334,
+   "joints": 12,
+   "scale": 1,
+   "forward": "+Z",
+   "up": "+Y",
+   "origin": "centre of the floating footprint ON THE WATERLINE: put the origin at the water surface (y = 0 is the water); the hull and webbed feet below y = 0 are meant to be seen through clear water",
+   "bounds": {
+    "min": [
+     -0.2399,
+     -0.202,
+     -0.62
+    ],
+    "max": [
+     0.2399,
+     0.7161,
+     0.6344
+    ]
+   },
+   "materials": [
+    {
+     "name": "swan",
+     "alphaMode": "OPAQUE",
+     "doubleSided": false
+    }
+   ],
+   "clips": [
+    {
+     "name": "swim",
+     "duration": 2,
+     "loop": true,
+     "note": "paddle loop: body bob 4 mm at 1 Hz (one stroke per foot per loop), slight neck sway, head looks around; feet paddle alternately under water"
+    },
+    {
+     "name": "preen",
+     "duration": 6,
+     "loop": true,
+     "note": "starts and ends exactly in the swim pose (crossfade ~0.3 s either way); neck reaches back to the left wing at 1.5 s, nibbles 1.6-4.4 s, returns by 6 s"
+    }
+   ],
+   "notes": [
+    "Single material (white plumage atlas incl. bill, lores, eye and feet) with a 512 UASTC normal map for the feather detail; roughness from the ORM texture (G).",
+    "Mute swans hold the wings folded; there is no flight rig. Drift the root yourself (~0.1-0.3 m/s) and yaw slowly toward the heading.",
+    "Size: 1.25 m tail-to-bill along Z with the neck raised in an S (a typical adult, ~1.5 m when stretched); head top 0.71 m above the water. Scale 1.12 if you want exactly 1.4 m floating length."
+   ]
+  },
+  "trout": {
+   "name": "Brown trout",
+   "species": "Salmo trutta",
+   "glb": "models/fauna/trout.glb",
+   "bytes": 74116,
+   "tris": 1220,
+   "joints": 6,
+   "scale": 1,
+   "forward": "+Z",
+   "up": "+Y",
+   "origin": "body centre (mid length, mid depth); snout at z = +0.175, caudal fin tip at z = -0.175",
+   "bounds": {
+    "min": [
+     -0.0224,
+     -0.0408,
+     -0.173
+    ],
+    "max": [
+     0.0224,
+     0.0561,
+     0.175
+    ]
+   },
+   "materials": [
+    {
+     "name": "trout",
+     "alphaMode": "OPAQUE",
+     "doubleSided": false
+    }
+   ],
+   "clips": [
+    {
+     "name": "swim",
+     "duration": 1,
+     "loop": true,
+     "note": "one tail beat per second, traveling wave head -> tail (S-bend grows toward the tail), slight recoil yaw of the head; use timeScale 1-3 for faster swimming"
+    }
+   ],
+   "notes": [
+    "Skinned spine (spine1 root -> head forward, spine2..spine4 -> tail backward), so the clip plays with a plain AnimationMixer.",
+    "Shader alternative for many instances (no skinning): bend amount t = clamp((0.175 - position.z) / 0.35, 0, 1) from the local position, x += A * t^2 * sin(2*pi*(f*time - 0.9*t)) with A ~ 0.03 m; no vertex attribute is needed.",
+    "Seen mostly from above through water: the back is dark olive with black spots; red spots sit along and under the lateral line."
+   ]
+  },
+  "kingfisher": {
+   "name": "Common kingfisher",
+   "species": "Alcedo atthis",
+   "glb": "models/fauna/kingfisher.glb",
+   "bytes": 92396,
+   "tris": 1324,
+   "joints": 11,
+   "scale": 1,
+   "forward": "+Z",
+   "up": "+Y",
+   "origin": "body centre in the flight posture (bind pose = horizontal body)",
+   "bounds": {
+    "min": [
+     -0.122,
+     -0.0237,
+     -0.0793
+    ],
+    "max": [
+     0.122,
+     0.0237,
+     0.087
+    ]
+   },
+   "materials": [
+    {
+     "name": "kingfisher",
+     "alphaMode": "OPAQUE",
+     "doubleSided": false
+    }
+   ],
+   "clips": [
+    {
+     "name": "fly",
+     "duration": 0.12,
+     "loop": true,
+     "note": "whirring wingbeat, 0.12 s loop (~8 Hz); folded wings and feet scaled to ~0 (tucked)"
+    },
+    {
+     "name": "perch",
+     "duration": 2,
+     "loop": true,
+     "note": "2 s loop: upright body (~45 deg), folded wings shown, flight wings scaled to ~0 into the shoulder, feet down; quick head turns and one tail bob"
+    }
+   ],
+   "notes": [
+    "ALWAYS play a clip: the bind pose shows both the spread flight wings and the folded wings (each clip hides one set by bone scale).",
+    "perchGrip = the toes in the perch pose (creature space). To sit the bird on a twig: bird.position = twigTop - perchGrip (rotated by the bird yaw)."
+   ],
+   "perchGrip": [
+    0,
+    -0.0176,
+    0.0097
+   ]
+  },
+  "swallow": {
+   "name": "Barn swallow",
+   "species": "Hirundo rustica",
+   "glb": "models/fauna/swallow.glb",
+   "bytes": 64316,
+   "tris": 902,
+   "joints": 8,
+   "scale": 1,
+   "forward": "+Z",
+   "up": "+Y",
+   "origin": "body centre; bill tip z = +0.066, streamer tips z = -0.112",
+   "bounds": {
+    "min": [
+     -0.156,
+     -0.0124,
+     -0.112
+    ],
+    "max": [
+     0.156,
+     0.012,
+     0.0665
+    ]
+   },
+   "materials": [
+    {
+     "name": "swallow",
+     "alphaMode": "OPAQUE",
+     "doubleSided": false
+    }
+   ],
+   "clips": [
+    {
+     "name": "fly",
+     "duration": 1,
+     "loop": true,
+     "note": "1.0 s loop: two 0.25 s wingbeats then a 0.5 s glide with the fork opening slightly"
+    },
+    {
+     "name": "flap",
+     "duration": 0.25,
+     "loop": true,
+     "note": "0.25 s wingbeat loop (continuous flapping)"
+    },
+    {
+     "name": "glide",
+     "duration": 1,
+     "loop": true,
+     "note": "1.0 s loop, wings held with slight sweep, gentle roll"
+    }
+   ],
+   "notes": [
+    "Fast, low swoops over the water with sharp banks; bank the root into turns (roll up to ~50 deg)."
+   ]
+  },
+  "dragonfly": {
+   "name": "Emperor dragonfly (male)",
+   "species": "Anax imperator",
+   "glb": "models/fauna/dragonfly.glb",
+   "bytes": 133616,
+   "tris": 528,
+   "joints": 8,
+   "scale": 1,
+   "forward": "+Z",
+   "up": "+Y",
+   "origin": "thorax centre (the wing hinges); head at z = +0.0135, abdomen tip at z = -0.064",
+   "bounds": {
+    "min": [
+     -0.0508,
+     -0.005,
+     -0.064
+    ],
+    "max": [
+     0.0508,
+     0.0052,
+     0.0135
+    ]
+   },
+   "materials": [
+    {
+     "name": "dragonfly_body",
+     "alphaMode": "OPAQUE",
+     "doubleSided": false
+    },
+    {
+     "name": "dragonfly_wings",
+     "alphaMode": "BLEND",
+     "doubleSided": true
+    }
+   ],
+   "clips": [
+    {
+     "name": "hover",
+     "duration": 0.05,
+     "loop": true,
+     "note": "0.05 s wingbeat loop (20 Hz), hindwings lead the forewings by a quarter cycle"
+    },
+    {
+     "name": "rest",
+     "duration": 0.1,
+     "loop": true,
+     "note": "wings held flat and still (perched or gliding)"
+    }
+   ],
+   "notes": [
+    "Two materials: dragonfly_body (opaque) and dragonfly_wings (alphaMode BLEND, double sided, shares the RGBA atlas; veins in alpha).",
+    "At 60 fps a 20 Hz beat aliases into a few frozen wing positions: give every instance mixer.timeScale = 0.9-1.1 (random) so the wings read as a shimmer, not a strobe.",
+    "Flight: darts in straight lines with sudden stops and hovers; keep the body level, add a 1-3 mm root bob at 2-4 Hz in code."
+   ]
+  }
+ },
+ "totalBytes": 658716
+}

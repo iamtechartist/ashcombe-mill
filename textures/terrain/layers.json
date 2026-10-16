@@ -1,0 +1,10 @@
+[
+  {"index":0,"name":"meadow_grass","sourceId":"Grass004","source":"ambientCG Grass004","tileMetres":2.5,"meanLinearAlbedo":0.1,"meanRoughness":0.62},
+  {"index":1,"name":"lush_wet_grass","sourceId":"Grass001","source":"ambientCG Grass001","tileMetres":2.5,"meanLinearAlbedo":0.1,"meanRoughness":0.55},
+  {"index":2,"name":"wet_bank_mud","sourceId":"brown_mud_03","source":"Poly Haven brown_mud_03","tileMetres":2,"meanLinearAlbedo":0.062,"meanRoughness":0.42},
+  {"index":3,"name":"streambed_gravel","sourceId":"dry_river_pebbles","source":"Poly Haven dry_river_pebbles","tileMetres":1.2,"meanLinearAlbedo":0.16,"meanRoughness":0.7},
+  {"index":4,"name":"pond_silt","sourceId":"brown_mud_rocks_01","source":"Poly Haven brown_mud_rocks_01","tileMetres":1.6,"meanLinearAlbedo":0.072,"meanRoughness":0.5},
+  {"index":5,"name":"farm_track","sourceId":"stony_dirt_path","source":"Poly Haven stony_dirt_path","tileMetres":3,"meanLinearAlbedo":0.13,"meanRoughness":0.85},
+  {"index":6,"name":"chalk","sourceId":"Rock018","source":"ambientCG Rock018","tileMetres":3,"meanLinearAlbedo":0.5,"meanRoughness":0.85},
+  {"index":7,"name":"leaf_litter","sourceId":"forest_leaves_02","source":"Poly Haven forest_leaves_02","tileMetres":3,"meanLinearAlbedo":0.085,"meanRoughness":0.82}
+]

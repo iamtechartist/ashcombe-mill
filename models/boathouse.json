@@ -1,0 +1,81 @@
+{
+ "version": 1,
+ "generated": "2026-10-09 10:40",
+ "source": "blender/scripts/ct_boathouse.py (headless Blender 5.2) -> blender/scripts/ct_pack.mjs",
+ "coords": "three.js world metres (X east, Y up, Z south). Add the GLB at the origin with no transform; every node carries only a translation (its pivot).",
+ "file": {
+  "bytes": 1866180,
+  "tris": 31872,
+  "ktx2KB": 1365,
+  "pack": "tools/pack-glb.mjs --tex 1024 --normal-tex 1024 --etc1s-quality 192 --etc1s-quality 176"
+ },
+ "nodes": [
+  {
+   "node": "Boathouse",
+   "origin": [
+    -44.5,
+    0.35,
+    -37
+   ],
+   "tris": 23392,
+   "materials": [
+    "M_Board",
+    "M_Brick",
+    "M_Iron",
+    "M_Oak",
+    "M_OakWet",
+    "M_Tile",
+    "Window_Glass"
+   ]
+  },
+  {
+   "node": "LandingStage",
+   "origin": [
+    -44.5,
+    0.35,
+    -37
+   ],
+   "tris": 3200,
+   "materials": [
+    "M_Iron",
+    "M_Oak",
+    "M_OakWet",
+    "M_Rope"
+   ]
+  },
+  {
+   "node": "RowingBoat",
+   "origin": [
+    -41.85,
+    0.087,
+    -36.95
+   ],
+   "tris": 5280,
+   "materials": [
+    "M_BoatPaint",
+    "M_Iron",
+    "M_Rope",
+    "M_Varnish"
+   ],
+   "pivot": "mesh-less pivot node (survives quantization); geometry in child RowingBoat_Geo"
+  }
+ ],
+ "notes": {
+  "RowingBoat": "Clinker-built rowing boat (3.9 m, thwarts, ribs, floorboards, rowlocks, two shipped oars, coiled painter). Mesh-less pivot node at the waterline centre (y = pond surface 0.087), bow toward +X (the open boat door); geometry in child RowingBoat_Geo. Bob it about this origin: keep heave within about +/-3 cm and roll/pitch within about 2 deg (the stern keel clears the pond bed by about 7 cm).",
+  "Boathouse": "Tarred lapped weatherboard (geometry laps aligned to the texture rows) on an oak frame, steep plain-tile roof with lapped courses, ridge tiles, bargeboards. Open boat door at the east (pond) end, side door + 4-pane window (Window_Glass) on the south wall. Pivot = (-44.5, 0.35, -37).",
+  "floors": "Walkways either side of the wet dock and the landing stage deck at y 0.35. Over the land half (x < -45.0) a raised store floor at y 0.97 on brick sill walls covers the bank, so terrain (<= 0.85 there) never shows through. Wet dock x -45.0..-40, z -38.75..-35.25 is open water.",
+  "LandingStage": "Timber stage along the south wall, x -47.5..-38.3, z -34.24..-32.7, deck y 0.36, oak piles driven 0.6 m into the bed, mooring post with ring + rope, sleeper steps up the bank at the west end.",
+  "groundContact": "Piles end 0.6 m below the sampled bed; brick sill walls 0.4 m below the lowest ground on the land segments.",
+  "materials": "M_OakWet / M_BoatPaint / M_Varnish reuse the M_Oak images with baseColorFactor tints."
+ },
+ "vertexColors": {
+  "attribute": "COLOR_0 (linear)",
+  "channels": {
+   "r": "baked ambient occlusion (Cycles, incl. terrain contact)",
+   "g": "moss / lichen / algae mask",
+   "b": "damp / wet / weathering-streak mask",
+   "a": 1
+  },
+  "warning": "GLTFLoader sets material.vertexColors = true when COLOR_0 exists, which would tint by the masks. Set it false and read the attribute as data (same convention as mill.glb)."
+ }
+}

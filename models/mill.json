@@ -1,0 +1,883 @@
+{
+ "version": 1,
+ "generated": "2026-10-09 15:26",
+ "source": "blender/ashcombe_mill.blend, scripts blender/scripts/am_*.py (am_build.py rebuilds everything)",
+ "coords": "three.js world metres (X east, Y up, Z south). All three GLBs are authored in world space: add them to the scene at the origin, no transform.",
+ "files": {
+  "mill.glb": {
+   "bytes": 4762764,
+   "tris": 47941,
+   "ktx2KB": 3645.5
+  },
+  "waterwheel.glb": {
+   "bytes": 947416,
+   "tris": 10980,
+   "ktx2KB": 713.0
+  },
+  "geartrain.glb": {
+   "bytes": 613748,
+   "tris": 11048,
+   "ktx2KB": 369.4
+  },
+  "pack": "tools/pack-glb.mjs --tex 2048 --normal-tex 1024 (sources pre-sized; ETC1S q192 mill/wheel, q128 gears; UASTC+Zstd normals; meshopt high)"
+ },
+ "vertexColors": {
+  "attribute": "COLOR_0 (unorm8 RGBA, linear)",
+  "channels": {
+   "r": "baked ambient occlusion (Cycles, 48 spp, 1.5 m; rotating parts baked alone)",
+   "g": "moss / lichen / algae mask",
+   "b": "damp / wet mask",
+   "a": 1
+  },
+  "warning": "GLTFLoader sets material.vertexColors = true when COLOR_0 exists, which would tint everything by the masks. Set it false and read the attribute as data.",
+  "suggestedShading": {
+   "ao": "albedo *= mix(1, ao, 0.9)",
+   "moss": "m = smoothstep(0.18, 0.42, g * noise(worldPos * 1.6)); albedo = mix(albedo, mix(mossA, mossB, noise), m); roughness = mix(roughness, 0.9, m)",
+   "damp": "albedo *= 1 - 0.35 * b * k; roughness *= 1 - 0.55 * b * k  (k = 0.6 for M_OakWheel / M_OakWet, else 1)",
+   "mossA_linear": [
+    0.045,
+    0.065,
+    0.018
+   ],
+   "mossB_linear": [
+    0.17,
+    0.19,
+    0.05
+   ]
+  }
+ },
+ "materials": {
+  "Window_Glass": "all window panes (individually tilted +-0.25 deg like old crown glass). Make emissive at night with a warm interior hint.",
+  "M_Flint": "knapped flint ground storey",
+  "M_Brick": "quoins, dressings, segmental arches, plinth, ground-floor paving",
+  "M_Weatherboard": "tarred boarding, fascias, bargeboards",
+  "M_RoofTile": "plain-tile roof + ridge tiles (geometric courses)",
+  "M_Timber": "oak frame, trestles, gantry, floors, gear wood",
+  "M_OakWet": "flume, sluice gate",
+  "M_OakWheel": "waterwheel buckets + shaft",
+  "M_Iron": "iron",
+  "M_Masonry": "headrace, culvert, wheel pit",
+  "M_PaintWhite": "windows, loading doors",
+  "M_PaintDark": "gutters, downpipes",
+  "M_Plaster": "whitewashed interior faces",
+  "M_Millstone": "millstones (untextured)"
+ },
+ "waterwheel": {
+  "node": "Waterwheel",
+  "pivot": [
+   23.2,
+   -2.75,
+   20.5
+  ],
+  "axis": [
+   1,
+   0,
+   0
+  ],
+  "rpm": 7.0,
+  "omegaRadPerSec": 0.73304,
+  "sense": "node.rotation.x += omega * dt with omega > 0: by the right-hand rule a positive rotation about +X carries the top (+Y) toward +Z (south), the direction the flume water travels. (The task brief said negative; that would run the wheel backwards.)",
+  "children": {
+   "Waterwheel_Geo": "iron shrouds, spokes, hubs, bolts, oak shaft (x 21.6..26.38, through the mill wall to the pit wheel)",
+   "Waterwheel_Buckets": "36 buckets (sole + start + arm boards), separate mesh for water effects"
+  },
+  "radius": 2.25,
+  "width": 1.3,
+  "shroudInnerHalfWidth": 0.615,
+  "buckets": {
+   "count": 36,
+   "partitionAngleDeg": "theta_i = i * 10, measured about +X from +Y toward +Z (top -> south) at rotation 0; the wheel turns theta forward",
+   "soleRadius": 1.87,
+   "kneeRadius": 2.07,
+   "tipRadius": 2.238,
+   "armLagDeg": 7.0,
+   "cell": "bucket i lies between partitions i and i+1; on the loaded south side partition i+1 is its floor and its mouth is at the rim between the arm tips of partitions i+1 and i",
+   "fillHint": "jet lands at theta ~5..20 deg; buckets carry water from ~10 deg to ~150 deg and spill from ~120 deg; empty on the ascending north side"
+  },
+  "clearances": {
+   "bottom": -5.0,
+   "tailWater": -5.06,
+   "pitFloor": -6.1
+  }
+ },
+ "gearTrain": {
+  "ratios": "wheel 7 rpm -> PitWheel 80 : Wallower 30 (18.67 rpm) -> GreatSpurWheel 102 : StoneNut 16 -> runner 119.0 rpm",
+  "drive": "angle_k = ratioToWheel_k * wheelAngle about the part's own axis (rotation.x for axis [1,0,0], rotation.y for [0,1,0]); all teeth are meshed at angle 0, so a shared wheel angle keeps them meshed",
+  "pivots": "each rotating part is a mesh-less node (pivot on its axis) with a child <name>_Geo; pack-glb quantization rewrites mesh-node transforms, the pivot nodes are untouched",
+  "parts": {
+   "PitWheel": {
+    "node": "PitWheel",
+    "pivot": [
+     26.13,
+     -2.75,
+     20.5
+    ],
+    "axis": [
+     1,
+     0,
+     0
+    ],
+    "rpm": 7.0,
+    "ratioToWheel": 1.0,
+    "teeth": 80,
+    "pitchRadius": 0.83,
+    "outerRadius": 0.895,
+    "cogs": "face cogs on the +X (east) face, mesh with the Wallower at the top"
+   },
+   "Wallower": {
+    "node": "Wallower",
+    "pivot": [
+     26.6,
+     -1.92,
+     20.5
+    ],
+    "axis": [
+     0,
+     1,
+     0
+    ],
+    "rpm": 18.6667,
+    "ratioToWheel": 2.666667,
+    "teeth": 30,
+    "pitchRadius": 0.3112,
+    "outerRadius": 0.371
+   },
+   "MainShaft": {
+    "node": "MainShaft",
+    "pivot": [
+     26.6,
+     -4.2,
+     20.5
+    ],
+    "axis": [
+     0,
+     1,
+     0
+    ],
+    "rpm": 18.6667,
+    "ratioToWheel": 2.666667,
+    "teeth": 0,
+    "yRange": [
+     -4.2,
+     1.6
+    ]
+   },
+   "GreatSpurWheel": {
+    "node": "GreatSpurWheel",
+    "pivot": [
+     26.6,
+     -1.55,
+     20.5
+    ],
+    "axis": [
+     0,
+     1,
+     0
+    ],
+    "rpm": 18.6667,
+    "ratioToWheel": 2.666667,
+    "teeth": 102,
+    "pitchRadius": 1.22,
+    "outerRadius": 1.305
+   },
+   "StoneNut_A": {
+    "node": "StoneNut_A",
+    "pivot": [
+     26.6,
+     -1.55,
+     19.0886
+    ],
+    "axis": [
+     0,
+     1,
+     0
+    ],
+    "rpm": -119.0,
+    "ratioToWheel": -17.0,
+    "teeth": 16,
+    "pitchRadius": 0.1914,
+    "outerRadius": 0.27,
+    "note": "stone spindle included (y -2.27 .. -0.84)"
+   },
+   "StoneNut_B": {
+    "node": "StoneNut_B",
+    "pivot": [
+     26.6,
+     -1.55,
+     21.9114
+    ],
+    "axis": [
+     0,
+     1,
+     0
+    ],
+    "rpm": -119.0,
+    "ratioToWheel": -17.0,
+    "teeth": 16,
+    "pitchRadius": 0.1914,
+    "outerRadius": 0.27,
+    "note": "stone spindle included (y -2.27 .. -0.84)"
+   },
+   "RunnerStone_A": {
+    "node": "RunnerStone_A",
+    "pivot": [
+     26.6,
+     -0.78,
+     19.0886
+    ],
+    "axis": [
+     0,
+     1,
+     0
+    ],
+    "rpm": -119.0,
+    "ratioToWheel": -17.0,
+    "teeth": 0,
+    "diameter": 1.2,
+    "yRange": [
+     -0.915,
+     -0.64
+    ]
+   },
+   "RunnerStone_B": {
+    "node": "RunnerStone_B",
+    "pivot": [
+     26.6,
+     -0.78,
+     21.9114
+    ],
+    "axis": [
+     0,
+     1,
+     0
+    ],
+    "rpm": -119.0,
+    "ratioToWheel": -17.0,
+    "teeth": 0,
+    "diameter": 1.2,
+    "yRange": [
+     -0.915,
+     -0.64
+    ]
+   }
+  },
+  "static": {
+   "Millstones_A": "bedstone + tun (vat) + horse + hopper, on the first floor (y -1.2)",
+   "Millstones_B": "same",
+   "GearFrame": "footstep, wheel-shaft inner bearing trestle, bridge trees, main-shaft top bearing beam"
+  },
+  "deviation": "Pit wheel 1.79 m and wallower 0.74 m over the cogs instead of ~2.4 / ~1.0: with the axle fixed at y -2.75 and the great spur under the first floor (-1.2), a bevel pit wheel meshing on top must have pitch radius <= ~0.85 m. Ratios are exact."
+ },
+ "flume": {
+  "x": 23.2,
+  "masonryChannel": {
+   "z": [
+    3.4,
+    7.0
+   ],
+   "innerHalfWidth": 0.45,
+   "bed": -0.6,
+   "note": "downstream of the sluice the water runs in a masonry throat; the timber trough starts at the culvert headwall"
+  },
+  "timberTrough": {
+   "z": [
+    7.0,
+    19.95
+   ],
+   "innerWidth": 0.9,
+   "insideDepth": 0.45
+  },
+  "waterY": "waterY(z) = -0.06 + (-0.30 + 0.06) * clamp((z - 3.4) / 16.55, 0, 1)",
+  "troughBottom": "waterY(z) - 0.25, rising to waterY - 0.15 over z 19.0 -> 19.95 (clears the bucket tips by ~6 cm)",
+  "sideTop": "waterY(z) + 0.20",
+  "hiddenInCulvert": [
+   7.5,
+   9.0
+  ],
+  "imperfection": "trough sags up to 1.8 cm between bents and wanders +-1.6 cm sideways; a straight water ribbon at x 23.2 stays inside",
+  "outfall": {
+   "z": 19.95,
+   "lipBottomY": -0.45,
+   "waterY": -0.3,
+   "jetLandsOnBuckets": "z ~20.4..21.2, y ~ -0.55..-0.65"
+  },
+  "samples": [
+   {
+    "z": 7.0,
+    "water": -0.1122,
+    "bottom": -0.3622
+   },
+   {
+    "z": 9.0,
+    "water": -0.1412,
+    "bottom": -0.3912
+   },
+   {
+    "z": 11.0,
+    "water": -0.1702,
+    "bottom": -0.4202
+   },
+   {
+    "z": 13.0,
+    "water": -0.1992,
+    "bottom": -0.4492
+   },
+   {
+    "z": 15.0,
+    "water": -0.2282,
+    "bottom": -0.4782
+   },
+   {
+    "z": 17.0,
+    "water": -0.2572,
+    "bottom": -0.5072
+   },
+   {
+    "z": 18.5,
+    "water": -0.279,
+    "bottom": -0.529
+   },
+   {
+    "z": 19.0,
+    "water": -0.2862,
+    "bottom": -0.5362
+   },
+   {
+    "z": 19.5,
+    "water": -0.2935,
+    "bottom": -0.4895
+   },
+   {
+    "z": 19.95,
+    "water": -0.3,
+    "bottom": -0.45
+   }
+  ]
+ },
+ "headrace": {
+  "x": 23.2,
+  "z": [
+   -1.5,
+   7.0
+  ],
+  "innerHalfWidth": "0.9 to z 2.9, narrowing to 0.45 at the sluice (z 3.4)",
+  "bed": -0.6,
+  "wallTop": 0.25,
+  "trashScreenZ": -1.05,
+  "sluiceGate": {
+   "z": 3.4,
+   "bottomY": -0.35,
+   "topY": 0.43,
+   "note": "gate raised 0.25 m; part of the Sluice mesh"
+  },
+  "culvert": {
+   "inletHeadwallZ": [
+    7.0,
+    7.5
+   ],
+   "outletPortalZ": [
+    9.0,
+    9.28
+   ],
+   "opening": "x 23.2 +- 0.55, y -0.6 .. 0.32"
+  }
+ },
+ "wheelPit": {
+  "x": [
+   22.2,
+   24.2
+  ],
+  "z": [
+   17.4,
+   23.6
+  ],
+  "floor": -6.1,
+  "westWallTop": -3.93,
+  "northWallTop": -4.3,
+  "openTo": "tailrace (south-west)",
+  "outerBearing": [
+   22.02,
+   -2.75,
+   20.5
+  ]
+ },
+ "building": {
+  "footprint": {
+   "x": [
+    24.4,
+    37.4
+   ],
+   "z": [
+    16.0,
+    25.0
+   ]
+  },
+  "floors": [
+   -4.2,
+   -1.2,
+   1.8
+  ],
+  "eaves": 4.6,
+  "ridge": 9.0,
+  "imperfection": "ridge sags 8.5 cm mid-span, eaves wave +-3 cm, long walls bow out 5 cm at the eaves, superstructure leans east ~0.3 deg",
+  "lucam": {
+   "x": [
+    29.8,
+    32.2
+   ],
+   "z": [
+    25.0,
+    26.1
+   ],
+   "y": [
+    1.3,
+    6.45
+   ],
+   "hoistBeamEnd": [
+    31.0,
+    5.62,
+    26.85
+   ]
+  },
+  "sackDoorNorth": {
+   "x": 31.0,
+   "sillY": 1.84,
+   "gantryTo": [
+    31.0,
+    1.47,
+    6.4
+   ]
+  },
+  "cartDoorSouth": {
+   "x": [
+    29.9,
+    32.1
+   ],
+   "y": [
+    -4.2,
+    -1.56
+   ]
+  },
+  "windows": [
+   {
+    "face": "S",
+    "storey": 0,
+    "center": [
+     26.8,
+     -2.525,
+     24.879
+    ],
+    "normal": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "size": [
+     0.95,
+     1.05
+    ]
+   },
+   {
+    "face": "S",
+    "storey": 0,
+    "center": [
+     35.299,
+     -2.525,
+     24.882
+    ],
+    "normal": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "size": [
+     0.95,
+     1.05
+    ]
+   },
+   {
+    "face": "N",
+    "storey": 0,
+    "center": [
+     27.998,
+     -2.525,
+     16.118
+    ],
+    "normal": [
+     0.0,
+     0.0,
+     -1.0
+    ],
+    "size": [
+     0.95,
+     1.05
+    ]
+   },
+   {
+    "face": "N",
+    "storey": 0,
+    "center": [
+     33.999,
+     -2.525,
+     16.12
+    ],
+    "normal": [
+     0.0,
+     0.0,
+     -1.0
+    ],
+    "size": [
+     0.95,
+     1.05
+    ]
+   },
+   {
+    "face": "W",
+    "storey": 0,
+    "center": [
+     24.522,
+     -2.525,
+     23.599
+    ],
+    "normal": [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     0.8,
+     0.95
+    ]
+   },
+   {
+    "face": "E",
+    "storey": 0,
+    "center": [
+     37.279,
+     -2.525,
+     18.001
+    ],
+    "normal": [
+     1.0,
+     -0.0,
+     0.0
+    ],
+    "size": [
+     0.95,
+     1.05
+    ]
+   },
+   {
+    "face": "E",
+    "storey": 0,
+    "center": [
+     37.28,
+     -2.525,
+     23.002
+    ],
+    "normal": [
+     1.0,
+     -0.0,
+     0.0
+    ],
+    "size": [
+     0.95,
+     1.05
+    ]
+   },
+   {
+    "face": "S",
+    "storey": 1,
+    "center": [
+     27.009,
+     0.22,
+     24.905
+    ],
+    "normal": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "size": [
+     0.9,
+     1.0
+    ]
+   },
+   {
+    "face": "S",
+    "storey": 1,
+    "center": [
+     35.011,
+     0.22,
+     24.904
+    ],
+    "normal": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "size": [
+     0.9,
+     1.0
+    ]
+   },
+   {
+    "face": "N",
+    "storey": 1,
+    "center": [
+     27.505,
+     0.22,
+     16.094
+    ],
+    "normal": [
+     0.0,
+     0.0,
+     -1.0
+    ],
+    "size": [
+     0.9,
+     1.0
+    ]
+   },
+   {
+    "face": "N",
+    "storey": 1,
+    "center": [
+     34.507,
+     0.22,
+     16.094
+    ],
+    "normal": [
+     0.0,
+     0.0,
+     -1.0
+    ],
+    "size": [
+     0.9,
+     1.0
+    ]
+   },
+   {
+    "face": "E",
+    "storey": 1,
+    "center": [
+     37.305,
+     0.22,
+     18.497
+    ],
+    "normal": [
+     1.0,
+     -0.0,
+     0.0
+    ],
+    "size": [
+     0.9,
+     1.0
+    ]
+   },
+   {
+    "face": "E",
+    "storey": 1,
+    "center": [
+     37.308,
+     0.22,
+     22.501
+    ],
+    "normal": [
+     1.0,
+     -0.0,
+     0.0
+    ],
+    "size": [
+     0.9,
+     1.0
+    ]
+   },
+   {
+    "face": "S",
+    "storey": 2,
+    "center": [
+     27.021,
+     3.22,
+     24.928
+    ],
+    "normal": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "size": [
+     0.9,
+     1.0
+    ]
+   },
+   {
+    "face": "S",
+    "storey": 2,
+    "center": [
+     35.024,
+     3.22,
+     24.924
+    ],
+    "normal": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "size": [
+     0.9,
+     1.0
+    ]
+   },
+   {
+    "face": "N",
+    "storey": 2,
+    "center": [
+     27.523,
+     3.22,
+     16.068
+    ],
+    "normal": [
+     0.0,
+     0.0,
+     -1.0
+    ],
+    "size": [
+     0.9,
+     1.0
+    ]
+   },
+   {
+    "face": "N",
+    "storey": 2,
+    "center": [
+     34.523,
+     3.22,
+     16.078
+    ],
+    "normal": [
+     0.0,
+     0.0,
+     -1.0
+    ],
+    "size": [
+     0.9,
+     1.0
+    ]
+   },
+   {
+    "face": "E",
+    "storey": 2,
+    "center": [
+     37.324,
+     3.22,
+     18.495
+    ],
+    "normal": [
+     1.0,
+     -0.0,
+     0.0
+    ],
+    "size": [
+     0.9,
+     1.0
+    ]
+   },
+   {
+    "face": "E",
+    "storey": 2,
+    "center": [
+     37.328,
+     3.22,
+     22.502
+    ],
+    "normal": [
+     1.0,
+     -0.0,
+     0.0
+    ],
+    "size": [
+     0.9,
+     1.0
+    ]
+   },
+   {
+    "face": "W",
+    "storey": 1,
+    "center": [
+     24.506,
+     0.22,
+     23.0
+    ],
+    "normal": [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     0.8,
+     1.0
+    ]
+   },
+   {
+    "face": "W",
+    "storey": 2,
+    "center": [
+     24.52,
+     3.22,
+     20.497
+    ],
+    "normal": [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     0.9,
+     1.0
+    ]
+   },
+   {
+    "face": "W",
+    "storey": 3,
+    "center": [
+     24.536,
+     5.758,
+     20.499
+    ],
+    "normal": [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     0.7,
+     0.8
+    ]
+   },
+   {
+    "face": "E",
+    "storey": 3,
+    "center": [
+     37.337,
+     5.762,
+     20.494
+    ],
+    "normal": [
+     1.0,
+     -0.0,
+     0.0
+    ],
+    "size": [
+     0.7,
+     0.8
+    ]
+   }
+  ]
+ },
+ "notesForTerrain": [
+  "The terrain headrace cut ends at z ~7.4 while the dam shoulder rises to ~1.06 at z 7.5: the flume therefore runs through a masonry culvert (z 7.0..9.28). Optional: extend the cut (bed -0.6, half-width >= 0.85) to z ~9.3.",
+  "Beside the headrace the cut is a wide shallow gully; pitched-stone revetments in mill.glb (wall top y +0.25 at |dx| 1.35 out to |dx| 2.75) cover it.",
+  "Wheel bottom y -5.0 sits 6 cm above the tail water (-5.06)."
+ ]
+}

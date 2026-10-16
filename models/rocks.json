@@ -1,0 +1,398 @@
+{
+ "version": 1,
+ "generated": "2026-10-09",
+ "glb": "models/rocks.glb",
+ "source": "tools/rocks/build-rocks.mjs + tools/rocks/pack-rocks.mjs (Poly Haven CC0 scans, see docs/credits.md)",
+ "envelope": {
+  "radius": 1,
+  "top": 0.62,
+  "bottom": -0.62,
+  "visibleKnee": -0.4,
+  "note": "Each variant is normalised to the water-sim rock ellipsoid: scale uniformly by r and put the origin at the world.json rock centre (x, y, z). Footprint: mean radius in the ground band (y -0.4..0.2) ~1.0-1.05, never above rMax (<=1.3). Top = +0.62 exactly, bottom = -0.62 exactly. Above visibleKnee the scan keeps its proportions (vertical/horizontal scale ratio vertRatio, horizontal anisotropy aniso <= 1.4); below it the buried part is stretched to reach the envelope bottom (sink is 20-40 %, so the ground sits at y-0.372r..y-0.124r)."
+ },
+ "placement": {
+  "worldJson": "rocks[i] = [x, y, z, r, yaw, kind, tone, inWater]; kind 0 sarsen, 1 flint, 2 cobble",
+  "instanceMatrix": "compose(T(x, y, z) * Ry(yaw) * S(r)) * node.matrix  -- node.matrix is the meshopt dequantisation (KHR_mesh_quantization); fold it into every instance matrix, or convert the position/normal attributes to Float32 BEFORE geometry.applyMatrix4(node.matrix) (applyMatrix4 on the normalized Int16 positions clamps to [-1, 1] and shreds the mesh)",
+  "variantPick": "variant = kind.variants[hash(i) % kind.variants.length] (any stable hash of the rock index)",
+  "lod": "kinds 0/1: draw <name> (LOD0) near, <name>_lod1 beyond ~ 40 * r metres (screen height < ~4 %); cobbles have no LOD1: hide beyond ~60 m or fade into terrain",
+  "noMirror": "do not mirror (negative scale) instances: InstancedMesh does not flip winding per instance",
+  "tone": "per-instance tone 0..1: albedo *= mix(0.85, 1.12, tone); also a slight hue swing mix(vec3(1.03,1.0,0.95), vec3(0.96,0.99,1.03), tone)"
+ },
+ "materials": {
+  "rock_sarsen": "2048 colour atlas (ETC1S), 1024 normal (UASTC), 512 roughness in G (ETC1S, no AO), grey-brown graded scans with natural lichen, light moss on 2 of 9",
+  "rock_flint": "1024 colour (ETC1S), 512 normal (UASTC), 512 ORM (R = baked AO, G = roughness); procedural flint: dark glossy conchoidal scars (rough ~0.38) + chalky cortex (rough ~0.88) + patina rim + iron staining",
+  "rock_cobble": "1024 colour (ETC1S), 256 normal (UASTC), 256 ORM; flint, brown flint and chalk-lump looks",
+  "sharing": "one material per kind; every variant of a kind shares its atlas, so one InstancedMesh per variant (and per LOD) keeps one material/texture set per kind"
+ },
+ "shading": {
+  "note": "Albedo is moss-free apart from light natural lichen on the sarsens; the runtime adds moss, wetness and algae procedurally (TSL). Suggested recipe:",
+  "moss": {
+   "mask": "up = smoothstep(0.35, 0.85, Nw.y); north = smoothstep(0.0, 0.7, -Nw.z) * smoothstep(-0.2, 0.35, Nw.y)  (north = -Z); m = saturate(0.75*up + 0.6*north) * smoothstep(0.42, 0.62, fbm(Pw * 1.7)) * kindAmount; no moss below waterY + 0.04 (algae there instead)",
+   "kindAmount": {
+    "sarsen": 0.85,
+    "flint": 0.3,
+    "cobble": 0.1
+   },
+   "colourLinear": [
+    "vec3(0.045, 0.065, 0.018)",
+    "vec3(0.10, 0.12, 0.035)"
+   ],
+   "roughness": 0.95,
+   "normal": "blend the normal map 50 % towards the geometric normal under moss (moss fills the micro relief)",
+   "lichen": "sarsen only: cellular spots (freq ~5/m, density 0.12) of pale grey-green vec3(0.33, 0.35, 0.29) and rare yellow vec3(0.42, 0.34, 0.10), on sides and tops"
+  },
+  "wet": {
+   "inputs": "waterY = local water surface (sim height at the instance, or pond level 0.09 for the millpond); h = Pw.y - waterY",
+   "submerged": "h < 0: albedo *= 0.55; roughness = 0.22; algae film: albedo = mix(albedo, vec3(0.05, 0.06, 0.025), 0.35 * smoothstep(-0.03, -0.15, h))",
+   "splashBand": "band = 0.05 + 0.04 * noise(Pw * 6); 0 <= h < band: wet = 1 - smoothstep(0, band, h); albedo *= mix(1, 0.6, wet); roughness = mix(base, 0.2, wet)",
+   "bankRocks": "inWater = 0: a soil-damp band just above the terrain: albedo *= mix(0.78, 1, smoothstep(0.0, 0.12, (Pw.y - groundY) / r)); after rain scale everything by the global wetness"
+  },
+  "contact": "no baked ground AO: let the terrain/SSAO handle contact; flint/cobble ORM.R carries self-occlusion only"
+ },
+ "kinds": [
+  {
+   "id": 0,
+   "name": "sarsen",
+   "material": "rock_sarsen",
+   "variants": [
+    {
+     "lod0": "sarsen_0",
+     "lod1": "sarsen_0_lod1",
+     "tris": [
+      2500,
+      624
+     ],
+     "rMax": 1.294,
+     "rGround": 1.006,
+     "rGroundMin": 0.762,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.4,
+     "vertRatio": 1.16,
+     "source": "polyhaven:rock_moss_set_01#rock_moss_set_01_rock01",
+     "look": "warm"
+    },
+    {
+     "lod0": "sarsen_1",
+     "lod1": "sarsen_1_lod1",
+     "tris": [
+      2500,
+      624
+     ],
+     "rMax": 1.242,
+     "rGround": 1.034,
+     "rGroundMin": 0.626,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.09,
+     "vertRatio": 0.77,
+     "source": "polyhaven:rock_moss_set_01#rock_moss_set_01_rock04",
+     "look": "warm"
+    },
+    {
+     "lod0": "sarsen_2",
+     "lod1": "sarsen_2_lod1",
+     "tris": [
+      2500,
+      624
+     ],
+     "rMax": 1.293,
+     "rGround": 0.93,
+     "rGroundMin": 0.637,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.4,
+     "vertRatio": 1.17,
+     "source": "polyhaven:rock_moss_set_01#rock_moss_set_01_rock05",
+     "look": "warm"
+    },
+    {
+     "lod0": "sarsen_3",
+     "lod1": "sarsen_3_lod1",
+     "tris": [
+      2500,
+      624
+     ],
+     "rMax": 1.3,
+     "rGround": 0.953,
+     "rGroundMin": 0.581,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.3,
+     "vertRatio": 1.19,
+     "source": "polyhaven:rock_moss_set_01#rock_moss_set_01_rock06",
+     "look": "warm"
+    },
+    {
+     "lod0": "sarsen_4",
+     "lod1": "sarsen_4_lod1",
+     "tris": [
+      2500,
+      624
+     ],
+     "rMax": 1.3,
+     "rGround": 0.901,
+     "rGroundMin": 0.655,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.4,
+     "vertRatio": 0.81,
+     "source": "polyhaven:rock_moss_set_02#rock_moss_set_02_rock13",
+     "look": "grey"
+    },
+    {
+     "lod0": "sarsen_5",
+     "lod1": "sarsen_5_lod1",
+     "tris": [
+      2500,
+      624
+     ],
+     "rMax": 1.205,
+     "rGround": 1.044,
+     "rGroundMin": 0.858,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.36,
+     "vertRatio": 1.23,
+     "source": "polyhaven:rock_moss_set_02#rock_moss_set_02_rock07",
+     "look": "grey"
+    },
+    {
+     "lod0": "sarsen_6",
+     "lod1": "sarsen_6_lod1",
+     "tris": [
+      2500,
+      624
+     ],
+     "rMax": 1.3,
+     "rGround": 0.985,
+     "rGroundMin": 0.537,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.23,
+     "vertRatio": 1.35,
+     "source": "polyhaven:rock_moss_set_02#rock_moss_set_02_rock08",
+     "look": "grey"
+    },
+    {
+     "lod0": "sarsen_7",
+     "lod1": "sarsen_7_lod1",
+     "tris": [
+      2500,
+      624
+     ],
+     "rMax": 1.236,
+     "rGround": 1.046,
+     "rGroundMin": 0.865,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.31,
+     "vertRatio": 0.85,
+     "source": "polyhaven:rock_moss_set_02#rock_moss_set_02_rock11",
+     "look": "grey"
+    },
+    {
+     "lod0": "sarsen_8",
+     "lod1": "sarsen_8_lod1",
+     "tris": [
+      2500,
+      624
+     ],
+     "rMax": 1.157,
+     "rGround": 1.042,
+     "rGroundMin": 0.895,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.4,
+     "vertRatio": 1.27,
+     "source": "polyhaven:rock_moss_set_02#rock_moss_set_02_rock12",
+     "look": "grey"
+    }
+   ]
+  },
+  {
+   "id": 1,
+   "name": "flint",
+   "material": "rock_flint",
+   "variants": [
+    {
+     "lod0": "flint_0",
+     "lod1": "flint_0_lod1",
+     "tris": [
+      2500,
+      624
+     ],
+     "rMax": 1.294,
+     "rGround": 0.957,
+     "rGroundMin": 0.772,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.4,
+     "vertRatio": 0.99,
+     "source": "polyhaven:stone_01#stone_01",
+     "look": "flint"
+    },
+    {
+     "lod0": "flint_1",
+     "lod1": "flint_1_lod1",
+     "tris": [
+      2500,
+      624
+     ],
+     "rMax": 1.295,
+     "rGround": 1.026,
+     "rGroundMin": 0.759,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.4,
+     "vertRatio": 0.95,
+     "source": "polyhaven:boulder_01#boulder_01",
+     "look": "flint"
+    },
+    {
+     "lod0": "flint_2",
+     "lod1": "flint_2_lod1",
+     "tris": [
+      2500,
+      624
+     ],
+     "rMax": 1.193,
+     "rGround": 1.047,
+     "rGroundMin": 0.899,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.07,
+     "vertRatio": 0.76,
+     "source": "polyhaven:moon_rock_02#moon_rock_02_LOD0",
+     "look": "flint"
+    },
+    {
+     "lod0": "flint_3",
+     "lod1": "flint_3_lod1",
+     "tris": [
+      2500,
+      624
+     ],
+     "rMax": 1.246,
+     "rGround": 1.047,
+     "rGroundMin": 0.904,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.4,
+     "vertRatio": 0.96,
+     "source": "polyhaven:moon_rock_03#moon_rock_03_LOD0",
+     "look": "flint"
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "name": "cobble",
+   "material": "rock_cobble",
+   "variants": [
+    {
+     "lod0": "cobble_0",
+     "lod1": null,
+     "tris": [
+      408,
+      0
+     ],
+     "rMax": 1.184,
+     "rGround": 0.979,
+     "rGroundMin": 0.602,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.2,
+     "vertRatio": 1.18,
+     "source": "polyhaven:namaqualand_stones_01#namaqualand_stones_01_a",
+     "look": "brown"
+    },
+    {
+     "lod0": "cobble_1",
+     "lod1": null,
+     "tris": [
+      400,
+      0
+     ],
+     "rMax": 1.284,
+     "rGround": 0.906,
+     "rGroundMin": 0.412,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.25,
+     "vertRatio": 1.1,
+     "source": "polyhaven:namaqualand_stones_01#namaqualand_stones_01_c",
+     "look": "chalk"
+    },
+    {
+     "lod0": "cobble_2",
+     "lod1": null,
+     "tris": [
+      400,
+      0
+     ],
+     "rMax": 1.29,
+     "rGround": 1.011,
+     "rGroundMin": 0.652,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.11,
+     "vertRatio": 0.98,
+     "source": "polyhaven:namaqualand_stones_01#namaqualand_stones_01_e",
+     "look": "brown"
+    },
+    {
+     "lod0": "cobble_3",
+     "lod1": null,
+     "tris": [
+      400,
+      0
+     ],
+     "rMax": 1.184,
+     "rGround": 1.019,
+     "rGroundMin": 0.765,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.4,
+     "vertRatio": 1.09,
+     "source": "polyhaven:namaqualand_boulders_01#namaqualand_rocks_01_a",
+     "look": "chalk"
+    },
+    {
+     "lod0": "cobble_4",
+     "lod1": null,
+     "tris": [
+      400,
+      0
+     ],
+     "rMax": 1.289,
+     "rGround": 0.962,
+     "rGroundMin": 0.217,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.4,
+     "vertRatio": 0.92,
+     "source": "polyhaven:moon_rock_06#moon_rock_06_LOD0",
+     "look": "flint"
+    },
+    {
+     "lod0": "cobble_5",
+     "lod1": null,
+     "tris": [
+      400,
+      0
+     ],
+     "rMax": 1.198,
+     "rGround": 1.016,
+     "rGroundMin": 0.794,
+     "top": 0.62,
+     "bottom": -0.62,
+     "aniso": 1.4,
+     "vertRatio": 1.4,
+     "source": "polyhaven:moon_rock_04#moon_rock_04_LOD0",
+     "look": "flint"
+    }
+   ]
+  }
+ ]
+}

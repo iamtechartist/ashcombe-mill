@@ -1,0 +1,127 @@
+{
+ "version": 1,
+ "generated": "2026-10-09 10:36",
+ "source": "blender/scripts/ct_cottage.py (headless Blender 5.2) -> blender/scripts/ct_pack.mjs",
+ "coords": "three.js world metres (X east, Y up, Z south). Add the GLB at the origin with no transform; every node carries only a translation (its pivot).",
+ "file": {
+  "bytes": 3134116,
+  "tris": 61196,
+  "ktx2KB": 2082.1,
+  "pack": "tools/pack-glb.mjs --tex 1024 --normal-tex 1024 --etc1s-quality 192"
+ },
+ "nodes": [
+  {
+   "node": "Cottage",
+   "origin": [
+    56,
+    2.1,
+    -30
+   ],
+   "tris": 30614,
+   "materials": [
+    "M_Brick",
+    "M_DoorPaint",
+    "M_Flint",
+    "M_Hazel",
+    "M_Oak",
+    "M_Paint",
+    "M_Pot",
+    "M_Thatch",
+    "M_ThatchRidge",
+    "M_Tile",
+    "Window_Glass"
+   ]
+  },
+  {
+   "node": "Garden",
+   "origin": [
+    47,
+    1.335,
+    -30
+   ],
+   "tris": 22560,
+   "materials": [
+    "M_Brick",
+    "M_Hazel",
+    "M_Iron",
+    "M_Oak",
+    "M_Plants",
+    "M_Soil"
+   ]
+  },
+  {
+   "node": "Garden_Fence",
+   "origin": [
+    47,
+    1.335,
+    -30
+   ],
+   "tris": 7410,
+   "materials": [
+    "M_Paint"
+   ]
+  },
+  {
+   "node": "ChimneyTop",
+   "origin": [
+    56.4137,
+    11.86,
+    -24.6556
+   ],
+   "tris": 202,
+   "materials": [
+    "M_Pot"
+   ],
+   "pivot": "mesh-less pivot node (survives quantization); geometry in child ChimneyTop_Geo"
+  },
+  {
+   "node": "Cottage_Door",
+   "origin": [
+    53.1071,
+    2.1,
+    -29.5878
+   ],
+   "tris": 210,
+   "materials": [
+    "M_DoorPaint",
+    "M_Iron"
+   ],
+   "pivot": "mesh-less pivot node (survives quantization); geometry in child Cottage_Door_Geo"
+  },
+  {
+   "node": "Garden_Gate",
+   "origin": [
+    43.7575,
+    1.3986,
+    -29.3246
+   ],
+   "tris": 200,
+   "materials": [
+    "M_Iron",
+    "M_Paint"
+   ],
+   "pivot": "mesh-less pivot node (survives quantization); geometry in child Garden_Gate_Geo"
+  }
+ ],
+ "notes": {
+  "ChimneyTop": "Mesh-less node at the flue exit (top centre of the south chimney pot): emit chimney smoke at its world position. The pot itself is the child ChimneyTop_Geo.",
+  "Cottage_Door": "Mesh-less pivot on the front door hinge axis (vertical), child Cottage_Door_Geo = the leaf. rotation.y < 0 swings it inward (into the house); closed = 0.",
+  "Garden_Gate": "Mesh-less pivot on the gate hinge axis (north gate post of the west fence, facing the pond), child Garden_Gate_Geo. rotation.y > 0 swings it into the garden; closed = 0.",
+  "Cottage": "Walls, thatch (M_Thatch + M_ThatchRidge + hazel liggers M_Hazel), chimney, windows (Window_Glass), porch hood, back outshot. Pivot = floor centre (56, 2.1, -30).",
+  "Garden": "Raised beds (cabbages, onions, runner beans on hazel poles, lettuces), brick path with dog-tooth edging, hollyhocks + lavender, water butt, wheelbarrow. M_Plants = one double-sided material over a 256 px palette (alphaTest not needed).",
+  "Garden_Fence": "Picket fence 0.92 m, posts every <= 2.1 m sunk 0.5 m; pickets and rails follow the ground per post / per picket.",
+  "layout": "Garden west fence sits at garden-local x = -3.3 (not -6): from -6 to -3.4 the layout rectangle is the pond bank / water (ground -0.3..1.1). East side of the garden is closed by the cottage front; short fence returns meet the house corners.",
+  "groundContact": "Foundations, plinth, steps, posts, bed boards and the butt stand all extend 0.25-0.5 m below the lowest ground sampled from src/world/gen.js (seed 7).",
+  "materials": "Window_Glass is opaque dark glass. Hazel/plant/door/paint materials share images with M_Oak (baseColorFactor tints)."
+ },
+ "vertexColors": {
+  "attribute": "COLOR_0 (linear)",
+  "channels": {
+   "r": "baked ambient occlusion (Cycles, incl. terrain contact)",
+   "g": "moss / lichen / algae mask",
+   "b": "damp / wet / weathering-streak mask",
+   "a": 1
+  },
+  "warning": "GLTFLoader sets material.vertexColors = true when COLOR_0 exists, which would tint by the masks. Set it false and read the attribute as data (same convention as mill.glb)."
+ }
+}

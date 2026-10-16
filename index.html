@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Ashcombe Mill</title>
+  <meta name="description" content="Ashcombe Mill — an explorable English chalk-stream valley with a working watermill. Where the water does the work." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>html,body{background:#0f1513;height:100%;margin:0;overflow:hidden}#view{touch-action:none;outline:none;width:100%;height:100%;display:block;position:fixed;inset:0}#loader{color:#f4f1ea;z-index:10;--load:0;background:radial-gradient(120% 90% at 50% 40%,#18241f,#0b100e);place-items:center;font-family:Inter,system-ui,sans-serif;transition:opacity 1.1s;display:grid;position:fixed;inset:0}#loader.gone{opacity:0;pointer-events:none}#loader .box{justify-items:center;gap:18px;display:grid}#loader svg{fill:none;stroke:#e0bf86;stroke-width:.9px;stroke-linecap:round;width:132px;height:132px}#loader .wheel{transform-origin:66px 66px;transform:rotate(calc(var(--load) * 540deg));transition:transform .6s ease-out}#loader .water{stroke:#9fc2b8;stroke-dasharray:3 3;animation:.9s linear infinite pour}@keyframes pour{to{stroke-dashoffset:-12px}}#loader .name{letter-spacing:.02em;font:500 26px/1 Cormorant Garamond,Georgia,serif}#loader .msg{letter-spacing:.16em;text-transform:uppercase;color:#f4f1ea99;min-height:13px;font-size:11px}#loader .bar{background:#f4f1ea24;width:160px;height:1px}#loader .bar i{height:100%;width:calc(var(--load) * 100%);background:#c29a5b;transition:width .5s;display:block}#perf{color:#e8f0e8;white-space:pre;z-index:6;pointer-events:none;background:#0000008c;border-radius:6px;margin:0;padding:6px 9px;font:11px/1.4 ui-monospace,monospace;position:fixed;top:12px;right:12px}#error{color:#fdd;max-width:70vw;font:12px/1.4 ui-monospace,monospace;position:fixed;bottom:16px;left:16px}</style>
+  <script type="module" crossorigin src="./assets/index-BQphGUv3.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CmtWAROj.css">
+</head>
+<body>
+  <canvas id="view" tabindex="0" aria-label="Ashcombe Mill, an explorable 3D valley"></canvas>
+  <div id="loader" role="status" aria-live="polite">
+    <div class="box">
+      <svg viewBox="0 0 132 132" aria-hidden="true">
+        <path class="water" d="M4 34 H58 Q64 34 66 40" />
+        <g class="wheel">
+          <circle cx="66" cy="66" r="40" /><circle cx="66" cy="66" r="33" /><circle cx="66" cy="66" r="5" />
+          <g id="spokes"></g>
+        </g>
+        <path d="M14 112 Q66 104 118 112" opacity=".5" />
+      </svg>
+      <div class="name">Ashcombe Mill</div>
+      <div class="bar"><i></i></div>
+      <div class="msg" id="load-msg">Loading</div>
+    </div>
+  </div>
+  <script>
+    // spokes and buckets for the loader wheel
+    (function () { const g = document.getElementById('spokes'); let s = ''; for (let i = 0; i < 16; i++) { const a = (i / 16) * Math.PI * 2, c = Math.cos(a), n = Math.sin(a); s += `<line x1="${66 + c * 5}" y1="${66 + n * 5}" x2="${66 + c * 33}" y2="${66 + n * 33}" opacity=".55"/>`; const b = a + 0.12; s += `<path d="M${66 + c * 33} ${66 + n * 33} L${66 + c * 40} ${66 + n * 40} L${66 + Math.cos(b) * 40} ${66 + Math.sin(b) * 40}"/>`; } g.innerHTML = s; })();
+  </script>
+  <pre id="perf" hidden></pre>
+</body>
+</html>
